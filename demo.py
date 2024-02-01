@@ -15,6 +15,8 @@ from modules.keypoint_detector import KPDetector
 from modules.dense_motion import DenseMotionNetwork
 from modules.avd_network import AVDNetwork
 
+
+
 if sys.version_info[0] < 3:
     raise Exception("You must use Python 3 or higher. Recommended version is Python 3.9")
 
@@ -47,12 +49,14 @@ def load_checkpoints(config_path, checkpoint_path, device):
     dense_motion_network.to(device)
     inpainting.to(device)
     avd_network.to(device)
-       
+    print(checkpoint_path)  
     checkpoint = torch.load(checkpoint_path, map_location=device)
  
+   
     inpainting.load_state_dict(checkpoint['inpainting_network'])
     kp_detector.load_state_dict(checkpoint['kp_detector'])
     dense_motion_network.load_state_dict(checkpoint['dense_motion_network'])
+
     if 'avd_network' in checkpoint:
         avd_network.load_state_dict(checkpoint['avd_network'])
     
@@ -146,7 +150,8 @@ if __name__ == "__main__":
 
     source_image = imageio.imread(opt.source_image)
     reader = imageio.get_reader(opt.driving_video)
-    fps = reader.get_meta_data()['fps']
+    fps = 14.252
+    
     driving_video = []
     try:
         for im in reader:
